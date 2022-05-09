@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import "antd/dist/antd.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import About from "./Pages/About/About";
+import ContactUs from "./Pages/ContactUs/ContactUs";
+import Home from "./Pages/Home/Home";
+import Login from "./Pages/Login/Login";
+import PageNotFound from "./Pages/PageNotFound";
+import Pricing from "./Pages/Pricing/Pricing";
+import Register from "./Pages/Register/Register";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route index path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

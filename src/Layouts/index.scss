@@ -1,0 +1,111 @@
+$mainColor: #6534da;
+$mainSubColor: #9c82dd;
+$borderColor: #ced4da;
+
+.button {
+  background-color: $mainColor;
+  color: white;
+  border: 2px solid white;
+  border-radius: 50px;
+
+  &:hover {
+    background-color: white;
+    color: $mainColor;
+    border: 2px solid white;
+  }
+
+  &:focus {
+    background-color: white;
+    color: $mainColor;
+    border: 2px solid $mainColor;
+  }
+}
+
+.header {
+  background-color: $mainSubColor;
+  border-bottom-color: $mainSubColor;
+}
+
+.text {
+  color: $mainColor;
+  font-weight: 900;
+}
+
+.inputfield {
+  border-color: $borderColor;
+  border-radius: 5px;
+  &:focus {
+    border-color: $mainColor;
+    --box-shadow-color: $mainColor;
+    box-shadow: 1px 2px 5px var(--box-shadow-color);
+  }
+
+  &:hover {
+    border-color: $mainColor;
+  }
+}
+
+.menuitemparent {
+  &:hover::after {
+    border-bottom-color: white !important;
+  }
+}
+
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected::after {
+  border-bottom: 2px solid $mainColor;
+}
+
+.menuitem {
+  color: black !important;
+
+  &:focus {
+    color: $mainColor !important;
+  }
+
+  &:hover {
+    color: white !important;
+  }
+}
+
+.homeIcon {
+  color: $mainColor;
+  font-size: 45px;
+  margin-right: 10px;
+}
+
+.borderColor {
+  border-color: #dee2e6;
+}
+
+.pricingFormParent {
+  background-color: $mainColor;
+}
+
+.pricingForm {
+  background-color: $mainSubColor;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: $borderColor;
+  padding: 10px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  &:active {
+    border-color: $mainColor;
+    --box-shadow-color: $mainColor;
+    box-shadow: 1px 2px 5px var(--box-shadow-color);
+  }
+
+  &:hover {
+    border-color: $mainColor;
+  }
+}
+
+.contactus {
+  font-size: 18px;
+  background-color: $mainSubColor;
+  border-radius: 50%;
+  padding: 14px;
+}
