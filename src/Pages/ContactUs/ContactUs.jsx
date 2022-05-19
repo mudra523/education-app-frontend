@@ -1,6 +1,6 @@
 import { Button, Col, List, Row, Typography, Input, Form, Avatar } from "antd";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../Layouts/index";
 import {
   HeatMapOutlined,
@@ -8,10 +8,18 @@ import {
   PhoneFilled,
   ClockCircleOutlined,
 } from "@ant-design/icons";
+import { postRequest } from "../../api";
 
 function ContactUs() {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const navigate = useNavigate();
+  const onFinish = async (values) => {
+    await postRequest("contactus/create", values)
+      .then(({ data }) => {
+        navigate("/");
+      })
+      .catch((e) => {
+        console.log(e.response.data.message);
+      });
   };
 
   const onFinishFailed = (errorInfo) => {

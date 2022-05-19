@@ -7,6 +7,9 @@ import Login from "./Pages/Login/Login";
 import PageNotFound from "./Pages/PageNotFound";
 import Pricing from "./Pages/Pricing/Pricing";
 import Register from "./Pages/Register/Register";
+import Category from "./Pages/Category/Category";
+import Cart from "./Pages/Cart/Cart";
+import Course from "./Pages/Course/Course";
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/category/:categoryId/courses" element={<Course />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

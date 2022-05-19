@@ -11,7 +11,7 @@ $borderColor: #ced4da;
   &:hover {
     background-color: white;
     color: $mainColor;
-    border: 2px solid white;
+    border: 2px solid $mainColor;
   }
 
   &:focus {
@@ -108,4 +108,23 @@ $borderColor: #ced4da;
   background-color: $mainSubColor;
   border-radius: 50%;
   padding: 14px;
+}
+
+.ant-card-actions {
+  background-color: white;
+  border: 2px solid $mainColor;
+  border-radius: 10px;
+
+  .cardtext {
+    color: #6534da;
+    font-weight: 900;
+    padding: 15px 37px;
+  }
+
+  &:hover {
+    background-color: $mainColor;
+    .cardtext {
+      color: white;
+    }
+  }
 }

@@ -3,12 +3,18 @@ import Layout from "../../Layouts/index";
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
 import { LockFilled, UserOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getRequest, postRequest } from "../../api";
 const loginImage = require("../../Images/loginImage.jpg");
 
 function Login() {
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    navigate("/");
+  const onFinish = async (values) => {
+    await postRequest("login", values).then(({ data }) => {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/category");
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -20,9 +26,8 @@ function Login() {
       <Row
         style={{
           display: "flex",
-          // justifyContent: "start",
-          alignItems: "center",
-          height: "100%",
+          justifyContent: "center",
+          flexDirection: "row",
         }}
       >
         <Col span={12}>

@@ -53,7 +53,7 @@ function Pricing() {
     <Layout>
       <div
         style={{
-          padding: "100px 150px 0px 150px",
+          padding: "5% 8% 0% 8%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -88,10 +88,11 @@ function Pricing() {
           }}
           gutter={20}
         >
-          {pricingData.map((data) => {
+          {pricingData.map((data, index) => {
             return (
               <Col>
                 <Card
+                  key={index}
                   style={{
                     width: 350,
                     display: "flex",
@@ -125,80 +126,82 @@ function Pricing() {
                   <Divider style={{ borderColor: "#dee2e6", width: "100%" }} />
                   <div style={{ justifyContent: "center", display: "flex" }}>
                     <table>
-                      <tr style={{ padding: "5px" }}>
-                        <td
-                          style={{
-                            borderBottom: "1px solid #dee2e6",
-                            borderRight: "1px solid #dee2e6",
-                            padding: "5px 15px 5px 45px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Age of Kids
-                        </td>
-                        <td
-                          style={{
-                            borderBottom: "1px solid #dee2e6",
-                            padding: "5px 45px 5px 15px",
-                          }}
-                        >
-                          3 - 6 Years
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          style={{
-                            borderBottom: "1px solid #dee2e6",
-                            borderRight: "1px solid #dee2e6",
-                            padding: "5px 15px 5px 45px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Total Seats
-                        </td>
-                        <td
-                          style={{
-                            borderBottom: "1px solid #dee2e6",
-                            padding: "5px 45px 5px 15px",
-                          }}
-                        >
-                          3 - 6 Years
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          style={{
-                            borderBottom: "1px solid #dee2e6",
-                            borderRight: "1px solid #dee2e6",
-                            padding: "5px 15px 5px 45px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Class Time
-                        </td>
-                        <td
-                          style={{
-                            borderBottom: "1px solid #dee2e6",
-                            padding: "5px 45px 5px 15px",
-                          }}
-                        >
-                          3 - 6 Years
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          style={{
-                            borderRight: "1px solid #dee2e6",
-                            padding: "5px 15px 5px 45px",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Tution Fee
-                        </td>
-                        <td style={{ padding: "5px 45px 5px 15px" }}>
-                          3 - 6 Years
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr style={{ padding: "5px" }}>
+                          <td
+                            style={{
+                              borderBottom: "1px solid #dee2e6",
+                              borderRight: "1px solid #dee2e6",
+                              padding: "5px 15px 5px 45px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Age of Kids
+                          </td>
+                          <td
+                            style={{
+                              borderBottom: "1px solid #dee2e6",
+                              padding: "5px 45px 5px 15px",
+                            }}
+                          >
+                            3 - 6 Years
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              borderBottom: "1px solid #dee2e6",
+                              borderRight: "1px solid #dee2e6",
+                              padding: "5px 15px 5px 45px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Total Seats
+                          </td>
+                          <td
+                            style={{
+                              borderBottom: "1px solid #dee2e6",
+                              padding: "5px 45px 5px 15px",
+                            }}
+                          >
+                            3 - 6 Years
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              borderBottom: "1px solid #dee2e6",
+                              borderRight: "1px solid #dee2e6",
+                              padding: "5px 15px 5px 45px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Class Time
+                          </td>
+                          <td
+                            style={{
+                              borderBottom: "1px solid #dee2e6",
+                              padding: "5px 45px 5px 15px",
+                            }}
+                          >
+                            3 - 6 Years
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style={{
+                              borderRight: "1px solid #dee2e6",
+                              padding: "5px 15px 5px 45px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Tution Fee
+                          </td>
+                          <td style={{ padding: "5px 45px 5px 15px" }}>
+                            3 - 6 Years
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                   <Button
@@ -218,9 +221,19 @@ function Pricing() {
             );
           })}
         </Row>
-        <Row style={{ display: "flex", alignItems: "center" }}>
+        <Row
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Col
-            span={14}
+            xl={16}
+            lg={14}
+            md={18}
+            sm={24}
+            xs={24}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -308,12 +321,15 @@ function Pricing() {
             </Button>
           </Col>
           <Col
-            span={10}
+            xl={8}
+            lg={12}
+            md={16}
+            sm={24}
+            xs={24}
             style={{
               display: "flex",
               justifyContent: "start",
               alignItems: "center",
-              padding: "60px 40px",
               flexDirection: "column",
             }}
           >
@@ -334,7 +350,6 @@ function Pricing() {
             </Typography>
             <Form
               name="basic"
-              initialValues={{ remember: true }}
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
@@ -384,7 +399,6 @@ function Pricing() {
               <Form.Item name="select">
                 <Select
                   defaultValue="1"
-                  // style={{ width: "100%" }}
                   onChange={handleChange}
                   className="inputfield"
                 >

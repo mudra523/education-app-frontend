@@ -3,12 +3,18 @@ import Layout from "../../Layouts/index";
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
 import { LockFilled, UserOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { postRequest } from "../../api";
 const loginImage = require("../../Images/loginImage.jpg");
 
 function Register() {
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    navigate("/");
+  const onFinish = async (values) => {
+    await postRequest("register", values).then(({ data }) => {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/category");
+    });
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -32,8 +38,7 @@ function Register() {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
+          flexDirection: "row",
         }}
       >
         <Col span={12}>
