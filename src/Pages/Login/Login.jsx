@@ -1,25 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../../Layouts/index";
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
-import { LockFilled, UserOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { getRequest, postRequest } from "../../api";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { postRequest } from "../../api";
+import { useAuth } from "../../components/Auth";
+import { useDispatch } from "react-redux";
+import { store } from "../../features/authTokenSlice";
 const loginImage = require("../../Images/loginImage.jpg");
 
 function Login() {
   const navigate = useNavigate();
+  const auth = useAuth();
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  const redirectPath = location.state?.path || "/category";
   const onFinish = async (values) => {
     await postRequest("login", values).then(({ data }) => {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/category");
+      auth.login(data.token);
+      dispatch(store({ token: data.token, user: JSON.stringify(data.user) }));
+      navigate(redirectPath, { replace: true });
     });
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/category");
+    }
+  }, []);
 
   return (
     <Layout>
@@ -31,7 +44,11 @@ function Login() {
         }}
       >
         <Col span={12}>
-          <img src={loginImage} style={{ objectFit: "revert" }} />
+          <img
+            src={loginImage}
+            alt="loginImage"
+            style={{ objectFit: "revert" }}
+          />
         </Col>
         <Col
           span={12}

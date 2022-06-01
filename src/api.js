@@ -1,21 +1,26 @@
 import axios from "axios";
 import { notification } from "antd";
-
+import { useSelector } from "react-redux";
+import { selectAuthToken } from "./features/authTokenSlice";
+import store from "./app/store";
 const axiosClient = axios.create();
 
 axiosClient.defaults.baseURL = "http://localhost:2325/";
 
+// const token = useSelector(selectAuthToken);
+
+const token = store.getState().token.token;
+console.log({ token: token });
+
 axiosClient.defaults.headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
+  Authorization: `Bearer ${token || localStorage.getItem("token")}`,
 };
 
 const openNotificationWithIcon = (type, message) => {
   notification[type]({
     message: message,
-    // description:
-    //   "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
   });
 };
 
@@ -29,7 +34,7 @@ export async function getRequest(URL) {
       return response;
     })
     .catch((e) => {
-      e.response.data.errors.map((err) =>
+      e?.response?.data?.errors?.map((err) =>
         openNotificationWithIcon("error", err.msg)
       );
     });
@@ -39,7 +44,9 @@ export async function postRequest(URL, payload) {
   return axiosClient
     .post(`/${URL}`, payload)
     .then((response) => {
-      openNotificationWithIcon("success", response.data.meta.msg);
+      if (response?.data?.meta) {
+        openNotificationWithIcon("success", response.data.meta.msg);
+      }
       return response;
     })
     .catch((e) => {

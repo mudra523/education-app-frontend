@@ -11,13 +11,17 @@ import {
   message,
   Typography,
   PageHeader,
+  Rate,
+  Divider,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import Layout from "../../Layouts/index";
 import { deleteRequest, getRequest, postRequest, putRequest } from "../../api";
 import { useNavigate, useParams } from "react-router-dom";
-import { UploadOutlined } from "@ant-design/icons";
+import { LeftOutlined, RightOutlined, UploadOutlined } from "@ant-design/icons";
 import axios from "axios";
+
+const { Search } = Input;
 
 const { Meta } = Card;
 
@@ -35,17 +39,26 @@ function Course() {
   const [fileList, setFileList] = useState(null);
   const [courses, setCourses] = useState([]);
   const [category, setCategory] = useState(null);
+  const [editForm, setEditForm] = useState({});
   const user = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
     : "";
   useEffect(() => {
     getRequest("category/" + params.categoryId).then(({ data }) => {
       setCategory(data);
-      getRequest("courses?categoryId=" + params.categoryId).then(({ data }) => {
-        setCourses(data);
-      });
+    });
+    getRequest("courses?categoryId=" + params.categoryId).then(({ data }) => {
+      setCourses(data);
     });
   }, []);
+
+  //   const handleSearch = (value) => {
+  //     getRequest(
+  //       "courses?categoryId=" + params.categoryId + "&key=" + value
+  //     ).then(({ data }) => {
+  //       setCourses(data);
+  //     });
+  //   };
 
   const [form] = Form.useForm();
 
@@ -57,6 +70,13 @@ function Course() {
   };
   const showModal = (data) => {
     setVisible(data._id);
+    setEditForm({
+      name: data.name,
+      description: data.description,
+      author: data.author,
+      price: data.price,
+      image: "",
+    });
   };
 
   const deleteCourse = async (id) => {
@@ -70,8 +90,6 @@ function Course() {
       category_id: params.categoryId,
       course_id: id,
       user_id: user._id,
-    }).then(({ data }) => {
-      console.log(data);
     });
   };
 
@@ -84,6 +102,7 @@ function Course() {
 
   const handleCancel = () => {
     setVisible("");
+    setEditForm({});
     setAddVisible(false);
     setFileList(null);
   };
@@ -112,11 +131,11 @@ function Course() {
 
   const onFinish = async (values, id) => {
     let courseData = new FormData();
-    courseData.append("name", values?.name);
-    courseData.append("description", values?.description);
-    courseData.append("author", values?.author);
-    courseData.append("price", values?.price);
-    courseData.append("image", values?.image?.file?.originFileObj || "");
+    courseData.append("name", editForm?.name);
+    courseData.append("description", editForm?.description);
+    courseData.append("author", editForm?.author);
+    courseData.append("price", editForm?.price);
+    courseData.append("image", editForm?.image || "");
     courseData.append("categoryId", category._id);
 
     await putRequest("course/edit/" + id, courseData).then(({ data }) => {
@@ -153,6 +172,14 @@ function Course() {
         setLoading(false);
       });
     }
+
+    setEditForm({
+      name: editForm.name,
+      description: editForm.description,
+      author: editForm.author,
+      price: editForm.price,
+      image: info.file.originFileObj,
+    });
   };
 
   const beforeUpload = (file) => {
@@ -173,13 +200,17 @@ function Course() {
     }, 0);
   };
 
+  const handleCard = (data) => {
+    navigate(`${data._id}`);
+  };
+
   return (
     <Layout>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          padding: "2% 7% 0% 7%",
+          padding: "2% 5% 0% 5%",
         }}
       >
         <div
@@ -194,7 +225,7 @@ function Course() {
             onBack={() => window.history.back()}
             title={category?.name}
           />
-          {user?.role == "admin" ? (
+          {user?.role === "admin" ? (
             <Button
               className="button"
               onClick={showAddModal}
@@ -326,82 +357,122 @@ function Course() {
               </Form.Item>
             </Form>
           </Modal>
+          {/* <Input
+            placeholder="input search text"
+            onChange={(e) => handleSearch(e.target.value)}
+            className="inputfield"
+            style={{ padding: "10px", borderRadius: "5px" }}
+          /> */}
+
           <Row
             style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
-              padding: "5%",
             }}
           >
+            <Button
+              shape="circle"
+              style={{
+                marginTop: "60px",
+              }}
+            >
+              <LeftOutlined />
+            </Button>
             {courses?.map((data, index) => {
               return (
                 <Col
-                  lg={6}
-                  md={8}
-                  sm={12}
-                  xs={24}
                   style={{
-                    marginBottom: "35px",
                     display: "flex",
                     justifyContent: "center",
+                    margin: "10px",
                   }}
                 >
                   <Card
-                    hoverable
-                    style={{ width: 240, borderRadius: "10px" }}
+                    style={{ width: "240px" }}
                     cover={
                       <img
+                        onClick={() => handleCard(data)}
                         alt="example"
                         style={{
-                          height: "180px",
-                          borderRadius: "10px 10px 0px 0px",
+                          width: "240px",
+                          height: "135px",
                         }}
-                        src={`http://localhost:2325/${data.image}`}
+                        src={data.image}
                       />
                     }
-                    actions={
-                      user?.role == "admin"
-                        ? [
-                            <span
-                              onClick={() => showModal(data)}
-                              className="cardtext"
-                            >
-                              Edit
-                            </span>,
-                            <span
-                              className="cardtext"
-                              onClick={() => deleteCourse(data._id)}
-                            >
-                              Delete
-                            </span>,
-                          ]
-                        : [
-                            <span
-                              onClick={() => addCourse(data._id)}
-                              className="cardtext"
-                            >
-                              Add to Cart
-                            </span>,
-                          ]
-                    }
                   >
-                    <Meta title={data.name} description={data.description} />
-                    <Typography
-                      style={{
-                        margin: "12px 0px 0px 0px",
-                      }}
-                    >
-                      Author : {data.author}
-                    </Typography>
-                    <Typography
-                      style={{
-                        margin: "5px 0px 0px 0px",
-                        fontWeight: "bold",
-                      }}
-                    >
-                      Price : {data.price}
-                    </Typography>
+                    <div onClick={() => handleCard(data)}>
+                      <Typography
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "15px",
+                          margin: "3px 0px",
+                        }}
+                      >
+                        {data.name}
+                      </Typography>
+                      <Typography
+                        style={{ fontSize: "12px", margin: "3px 0px" }}
+                      >
+                        {data.author}
+                      </Typography>
+
+                      <span style={{ fontWeight: "bold", color: "#E59818" }}>
+                        4.2
+                        <Rate
+                          disabled
+                          value={4.2}
+                          style={{
+                            fontSize: "16px",
+                            margin: "0px 10px",
+                            padding: "0px",
+                            color: "#E59818",
+                          }}
+                        />
+                      </span>
+                      <Typography
+                        style={{
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          margin: "3px 0px",
+                        }}
+                      >
+                        &#8377;{data.price}
+                      </Typography>
+                    </div>
+                    {user?.role === "admin" ? (
+                      <div
+                        style={{
+                          textAlign: "center",
+                        }}
+                      >
+                        <Divider
+                          style={{
+                            borderColor: "lightgrey",
+                            margin: "10px 0px",
+                          }}
+                        />
+                        <Typography
+                          className="categoryText"
+                          onClick={() => showModal(data)}
+                        >
+                          Edit
+                        </Typography>
+                        <Divider
+                          style={{
+                            borderColor: "lightgrey",
+                            margin: "10px 0px",
+                          }}
+                        />
+
+                        <Typography
+                          className="categoryText"
+                          onClick={() => deleteCourse(data._id)}
+                        >
+                          Delete
+                        </Typography>
+                      </div>
+                    ) : null}
                   </Card>
                   <Modal
                     title="Edit Course"
@@ -422,107 +493,123 @@ function Course() {
                         flexDirection: "column",
                       }}
                     >
-                      <Form.Item
-                        name="name"
-                        initialValue={data.name}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input course name!",
-                          },
-                        ]}
+                      <Input
+                        defaultValue={editForm.name}
+                        className="inputfield"
+                        style={{
+                          padding: "10px",
+                          borderRadius: "5px",
+                          margin: "10px 0px",
+                        }}
+                        placeholder="Course Name"
+                        onChange={(e) =>
+                          setEditForm({
+                            name: e.target.value,
+                            description: editForm.description,
+                            author: editForm.author,
+                            price: editForm.price,
+                            image: editForm.image,
+                          })
+                        }
+                      />
+                      <Input
+                        defaultValue={editForm.description}
+                        className="inputfield"
+                        style={{
+                          padding: "10px",
+                          borderRadius: "5px",
+                          margin: "10px 0px",
+                        }}
+                        placeholder="Course Description"
+                        onChange={(e) =>
+                          setEditForm({
+                            name: editForm.name,
+                            description: e.target.value,
+                            author: editForm.author,
+                            price: editForm.price,
+                            image: editForm.image,
+                          })
+                        }
+                      />
+                      <Input
+                        defaultValue={editForm.author}
+                        className="inputfield"
+                        style={{
+                          padding: "10px",
+                          borderRadius: "5px",
+                          margin: "10px 0px",
+                        }}
+                        placeholder="Course Author"
+                        onChange={(e) =>
+                          setEditForm({
+                            name: editForm.name,
+                            description: editForm.description,
+                            author: e.target.value,
+                            price: editForm.price,
+                            image: editForm.image,
+                          })
+                        }
+                      />
+                      <Input
+                        defaultValue={editForm.price}
+                        className="inputfield"
+                        style={{
+                          padding: "10px",
+                          borderRadius: "5px",
+                          margin: "10px 0px",
+                        }}
+                        placeholder="Course Price"
+                        onChange={(e) =>
+                          setEditForm({
+                            name: editForm.name,
+                            description: editForm.description,
+                            author: editForm.author,
+                            price: e.target.value,
+                            image: editForm.image,
+                          })
+                        }
+                      />
+                      <Upload
+                        name="image"
+                        customRequest={dummyRequest}
+                        listType="text"
+                        beforeUpload={beforeUpload}
+                        onChange={handleChange}
+                        fileList={fileList}
+                        accept=".png,.jpg"
                       >
-                        <Input
-                          className="inputfield"
-                          style={{ padding: "10px", borderRadius: "5px" }}
-                          placeholder="Course Name"
-                        />
-                      </Form.Item>
-
-                      <Form.Item
-                        name="description"
-                        initialValue={data.description}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input course description!",
-                          },
-                        ]}
-                      >
-                        <Input
-                          className="inputfield"
-                          style={{ padding: "10px", borderRadius: "5px" }}
-                          placeholder="Course Description"
-                        />
-                      </Form.Item>
-
-                      <Form.Item
-                        name="author"
-                        initialValue={data.author}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input course author!",
-                          },
-                        ]}
-                      >
-                        <Input
-                          className="inputfield"
-                          style={{ padding: "10px", borderRadius: "5px" }}
-                          placeholder="Course Author"
-                        />
-                      </Form.Item>
-
-                      <Form.Item
-                        name="price"
-                        initialValue={data.price}
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input course price!",
-                          },
-                        ]}
-                      >
-                        <Input
-                          className="inputfield"
-                          style={{ padding: "10px", borderRadius: "5px" }}
-                          placeholder="Course Price"
-                        />
-                      </Form.Item>
-
-                      <Form.Item name="image">
-                        <Upload
-                          customRequest={dummyRequest}
-                          listType="text"
-                          beforeUpload={beforeUpload}
-                          onChange={handleChange}
-                          fileList={fileList}
-                          accept=".png,.jpg"
-                        >
-                          <Button icon={<UploadOutlined />}>
-                            Change Image
-                          </Button>
-                        </Upload>
-                      </Form.Item>
-
-                      <Form.Item>
                         <Button
-                          style={{
-                            fontSize: "15px",
-                            height: "55px",
-                            width: "160px",
-                          }}
-                          className="button"
-                          htmlType="submit"
+                          style={{ margin: "10px 0px" }}
+                          icon={<UploadOutlined />}
                         >
-                          Edit Course
+                          Change Image
                         </Button>
-                      </Form.Item>
+                      </Upload>
+                      <Button
+                        style={{
+                          fontSize: "15px",
+                          height: "55px",
+                          width: "160px",
+                          margin: "10px 0px",
+                        }}
+                        className="button"
+                        htmlType="submit"
+                      >
+                        Edit Course
+                      </Button>
                     </Form>
                   </Modal>
                 </Col>
               );
             })}
+            <Button
+              style={{
+                marginTop: "60px",
+              }}
+              shape="circle"
+            >
+              <RightOutlined />
+            </Button>
           </Row>
         </div>
       </div>

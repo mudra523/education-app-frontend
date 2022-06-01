@@ -18,7 +18,7 @@ function Home() {
     <Layout>
       <Row
         style={{
-          backgroundColor: "#9c82dd",
+          backgroundColor: "white",
         }}
       >
         <Col

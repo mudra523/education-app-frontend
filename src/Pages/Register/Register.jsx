@@ -1,25 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../../Layouts/index";
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
 import { LockFilled, UserOutlined } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { postRequest } from "../../api";
+import { useAuth } from "../../components/Auth";
+
 const loginImage = require("../../Images/loginImage.jpg");
 
 function Register() {
   const navigate = useNavigate();
+  const auth = useAuth();
+  const location = useLocation();
+
+  const redirectPath = location.state?.path || "/category";
   const onFinish = async (values) => {
     await postRequest("register", values).then(({ data }) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/category");
+      auth.login(data.token);
+      navigate(redirectPath, { replace: true });
     });
   };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/category");
+    }
+  }, []);
 
   const validateMessages = {
     required: "${label} is required!",

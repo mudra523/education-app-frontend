@@ -15,13 +15,18 @@ import {
   EllipsisOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { deleteRequest, getRequest } from "../../api";
-
+import { deleteRequest, getRequest, postRequest } from "../../api";
+import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+const stripePromise = loadStripe(
+  "pk_test_51L3xn7SFw0ZLHaVHPq6KzVtF0HoRG2kBWv5mToHChqhB6bModQsuTViCrbnmw3WercAIv5Xvsj7SzQhjGQsCU7zK00axlnwt5d"
+);
 const { Meta } = Card;
 
 function Cart() {
   const [cart, setCart] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     getRequest("carts/").then(({ data }) => {
       setCart(data);
@@ -32,6 +37,24 @@ function Cart() {
     await deleteRequest("cart/remove/" + id).then(() => {
       setCart((data) => data.filter((el) => el._id !== id));
     });
+  };
+
+  const buyNow = async () => {
+    const courses = cart.map((data) => {
+      return data.course;
+    });
+
+    const stripe = await stripePromise;
+    await postRequest("create-checkout-session", { courses }).then(
+      async ({ data }) => {
+        const result = await stripe.redirectToCheckout({
+          sessionId: data.id,
+        });
+        if (result.error) {
+          console.log(result.error);
+        }
+      }
+    );
   };
 
   return (
@@ -57,11 +80,13 @@ function Cart() {
                       borderRadius: "10px 10px 10px 10px",
                     }}
                     alt="course"
-                    src={"http://localhost:2325/" + item.course.image}
+                    src={item.course.image}
                   />
                 </Col>
                 <Col style={{ marginLeft: "30px" }}>
-                  <Typography style={{ padding: "2px 0px" }}>
+                  <Typography
+                    style={{ padding: "2px 0px", fontWeight: "bold" }}
+                  >
                     {item.course.name}
                   </Typography>
                   <Typography
@@ -108,7 +133,7 @@ function Cart() {
               width: "100px",
               marginTop: "15px",
             }}
-            //   onClick={() => removeCourse(item._id)}
+            onClick={buyNow}
           >
             Buy Now
           </Button>

@@ -1,24 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Button, Menu } from "antd";
+import { Badge, Button, Menu } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
-import ShoppingCartOutlined from "@ant-design/icons";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { getRequest } from "../api";
+import { useAuth } from "../components/Auth";
+import { useDispatch } from "react-redux";
+import { remove } from "../features/authTokenSlice";
+
 const { Item } = Menu;
 function Header() {
   const [path, setPath] = useState("/");
 
-  const token = localStorage.getItem("token");
+  const [cart, setCart] = useState([]);
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const nevigate = useNavigate();
+  const user = localStorage.getItem("user");
+
   useEffect(() => {
-    console.log(window.location.pathname);
     setPath(window.location.pathname);
+    if (user) {
+      getRequest("carts/").then(({ data }) => {
+        setCart(data);
+      });
+    }
   }, []);
 
   const handleLogout = async () => {
-    localStorage.removeItem("token", null);
-    localStorage.removeItem("user", null);
-    nevigate("/");
+    dispatch(remove());
+    auth.logout();
+    navigate("/");
   };
 
   return (
@@ -31,6 +44,7 @@ function Header() {
           alignItems: "center",
           padding: "10px",
           width: "100%",
+          borderBottom: "1px solid lightgrey",
         }}
         className="header"
       >
@@ -44,95 +58,106 @@ function Header() {
           }}
           className="header"
         >
-          {token ? (
+          <Item className="menuitemparent" key="/">
+            <Link className="menuitem" to="/">
+              Home
+            </Link>
+          </Item>
+
+          <Item className="menuitemparent" key="/about">
+            <Link className="menuitem" to="/about">
+              About
+            </Link>
+          </Item>
+          <Item className="menuitemparent" key="/pricing">
+            <Link className="menuitem" to="/pricing">
+              Pricing
+            </Link>
+          </Item>
+
+          <Item className="menuitemparent" key="/contactus">
+            <Link className="menuitem" to="/contactus">
+              Contact US
+            </Link>
+          </Item>
+          {auth.user && (
             <>
-              <Item
-                // icon={<ShoppingCartOutlined />}
-                className="menuitemparent"
-                key="/category"
-              >
+              <Item className="menuitemparent" key="/category">
                 <Link className="menuitem" to="/category">
                   Category
                 </Link>
               </Item>
-
-              <Item
-                // icon={<ShoppingCartOutlined />}
-                className="menuitemparent"
-                key="/cart"
-              >
-                <Link className="menuitem" to="/cart">
-                  Cart
-                </Link>
-              </Item>
-            </>
-          ) : (
-            <>
-              <Item className="menuitemparent" key="/">
-                <Link className="menuitem" to="/">
-                  Home
-                </Link>
-              </Item>
-
-              <Item className="menuitemparent" key="/about">
-                <Link className="menuitem" to="/about">
-                  About
-                </Link>
-              </Item>
-              <Item className="menuitemparent" key="/pricing">
-                <Link className="menuitem" to="/pricing">
-                  Pricing
-                </Link>
-              </Item>
-
-              <Item className="menuitemparent" key="/contactus">
-                <Link className="menuitem" to="/contactus">
-                  Contact US
+              <Item className="menuitemparent" key="/order">
+                <Link className="menuitem" to="/order">
+                  Order
                 </Link>
               </Item>
             </>
           )}
         </Menu>
-        {token ? (
-          <Button
-            style={{
-              height: "40px",
-              width: "11  0px",
-            }}
-            className="button"
-            type="primary"
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-          >
-            LogOut
-          </Button>
-        ) : window.location.pathname !== "/login" ? (
-          <Link to="/login">
-            <Button
-              className="button"
-              style={{
-                height: "40px",
-                width: "110px",
-              }}
-              icon={<LoginOutlined />}
+
+        {auth.user ? (
+          <>
+            <Link
+              className="menuitem"
+              to="/cart"
+              style={{ margin: "0px 35px 0px 10px", textAlign: "center" }}
             >
-              Login
-            </Button>
-          </Link>
-        ) : (
-          <Link to="/register">
+              <Badge
+                size="small"
+                style={{
+                  fontSize: "10px",
+                  textAlign: "center",
+                  backgroundColor: "#6534DA",
+                }}
+                count={cart?.length || 0}
+                overflowCount={100}
+              >
+                <ShoppingCartOutlined style={{ fontSize: "25px" }} />
+              </Badge>
+            </Link>
             <Button
               style={{
                 height: "40px",
-                width: "110px",
+                width: "11px 0px",
               }}
               className="button"
               type="primary"
-              icon={<LoginOutlined />}
+              icon={<LogoutOutlined />}
+              onClick={handleLogout}
             >
-              Register
+              LogOut
             </Button>
-          </Link>
+          </>
+        ) : (
+          <>
+            <Link to="/login">
+              <Button
+                className="button"
+                style={{
+                  height: "40px",
+                  width: "110px",
+                }}
+                icon={<LoginOutlined />}
+              >
+                Login
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button
+                style={{
+                  height: "40px",
+                  width: "110px",
+                  marginLeft: "20px",
+                }}
+                className="button"
+                type="primary"
+                icon={<LoginOutlined />}
+              >
+                Register
+              </Button>
+            </Link>
+          </>
         )}
       </div>
     </>

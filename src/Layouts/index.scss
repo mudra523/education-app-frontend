@@ -5,7 +5,7 @@ $borderColor: #ced4da;
 .button {
   background-color: $mainColor;
   color: white;
-  border: 2px solid white;
+  border: 2px solid $mainColor;
   border-radius: 50px;
 
   &:hover {
@@ -21,9 +21,27 @@ $borderColor: #ced4da;
   }
 }
 
+.button1{
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 50px;
+  
+    &:hover {
+      background-color: white;
+      color: $mainColor;
+      border: 2px solid $mainColor;
+    }
+  
+    &:focus {
+      background-color: white;
+      color: $mainColor;
+      border: 2px solid $mainColor;
+    }
+}
+
 .header {
-  background-color: $mainSubColor;
-  border-bottom-color: $mainSubColor;
+  background-color: white;
 }
 
 .text {
@@ -32,22 +50,22 @@ $borderColor: #ced4da;
 }
 
 .inputfield {
-  border-color: $borderColor;
-  border-radius: 5px;
+  border-color: $borderColor !important;
+  border-radius: 5px !important;
   &:focus {
-    border-color: $mainColor;
-    --box-shadow-color: $mainColor;
-    box-shadow: 1px 2px 5px var(--box-shadow-color);
+    border-color: $mainColor !important;
+    --box-shadow-color: $mainColor !important; 
+    box-shadow: 1px 2px 5px var(--box-shadow-color) !important;
   }
 
   &:hover {
-    border-color: $mainColor;
+    border-color: $mainColor !important;
   }
 }
 
 .menuitemparent {
   &:hover::after {
-    border-bottom-color: white !important;
+    border-bottom-color: $mainColor !important;
   }
 }
 
@@ -63,7 +81,7 @@ $borderColor: #ced4da;
   }
 
   &:hover {
-    color: white !important;
+    color: black !important;
   }
 }
 
@@ -128,3 +146,48 @@ $borderColor: #ced4da;
     }
   }
 }
+
+.coursecontentdata {
+  color: black;
+
+  &:hover {
+    color: $mainColor;
+  }
+}
+
+.coursecontentdatadelete {
+  color: black;
+
+  &:hover {
+    color: $mainColor;
+    border-color: $mainColor;
+  }
+
+  &:focus {
+    color: black;
+    border-color: #d9d9d9;
+  }
+}
+
+.categoryImage{
+    padding: 15px;
+    transition: transform .2s;
+    &:hover{
+        transform: scale(1.1);
+    }
+}
+
+.categoryText{
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover{
+        color: $mainColor;
+    }
+}
+
+.ant-card-body {
+     padding: 5px 0px; 
+}
+
