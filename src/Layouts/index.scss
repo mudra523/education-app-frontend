@@ -63,6 +63,23 @@ $borderColor: #ced4da;
   }
 }
 
+.searchinputfield{
+    border-color: $borderColor !important;
+  border-radius: 50px !important;
+  &:focus {
+    border-color: $mainColor !important;
+  }
+   box-shadow: none;
+
+  &:hover {
+    border-color: $mainColor !important;
+  }
+
+  .searchinputfieldbutton{
+      color:$mainColor !important
+  }
+}
+
 .menuitemparent {
   &:hover::after {
     border-bottom-color: $mainColor !important;
@@ -189,5 +206,32 @@ $borderColor: #ced4da;
 
 .ant-card-body {
      padding: 5px 0px; 
+}
+
+.coursCard{
+    overflow: hidden !important;
+    &:hover{
+        .coursCardImage{
+            transform: scale(1.1) !important;
+        }
+    }
+    .coursCardImage{
+        transition: transform .5s ease !important;
+    }
+}
+
+.cardItemTitle{
+    padding: 2px 0px; 
+    font-weight: bold;
+    cursor: pointer;
+
+    &:hover{
+        color: $mainColor;
+    }
+}
+
+.anticon svg:hover{
+    color:$mainColor !important;
+    border-color: $mainColor !important;
 }
 

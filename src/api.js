@@ -1,22 +1,24 @@
 import axios from "axios";
 import { notification } from "antd";
-import { useSelector } from "react-redux";
-import { selectAuthToken } from "./features/authTokenSlice";
 import store from "./app/store";
 const axiosClient = axios.create();
 
 axiosClient.defaults.baseURL = "http://localhost:2325/";
 
-// const token = useSelector(selectAuthToken);
+store.subscribe(listener);
 
-const token = store.getState().token.token;
-console.log({ token: token });
+function select(state) {
+  return state.token.token;
+}
 
-axiosClient.defaults.headers = {
-  "Content-Type": "application/json",
-  Accept: "application/json",
-  Authorization: `Bearer ${token || localStorage.getItem("token")}`,
-};
+function listener() {
+  let token = select(store.getState());
+  axiosClient.defaults.headers = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+}
 
 const openNotificationWithIcon = (type, message) => {
   notification[type]({

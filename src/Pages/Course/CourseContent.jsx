@@ -5,6 +5,7 @@ import {
   Form,
   Input,
   Modal,
+  PageHeader,
   Row,
   Typography,
 } from "antd";
@@ -240,10 +241,18 @@ function CourseContent() {
           lg={14}
           md={24}
         >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography style={{ fontSize: "24px", fontWeight: "bold" }}>
-              Course Content
-            </Typography>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <PageHeader
+              className="site-page-header"
+              onBack={() => window.history.back()}
+              title={"Course Content"}
+            />
 
             {user?.role === "admin" ? (
               <Button

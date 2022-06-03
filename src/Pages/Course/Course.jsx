@@ -13,12 +13,19 @@ import {
   PageHeader,
   Rate,
   Divider,
+  Carousel,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import Layout from "../../Layouts/index";
 import { deleteRequest, getRequest, postRequest, putRequest } from "../../api";
 import { useNavigate, useParams } from "react-router-dom";
-import { LeftOutlined, RightOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  AudioOutlined,
+  LeftOutlined,
+  RightOutlined,
+  SearchOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 
 const { Search } = Input;
@@ -30,6 +37,14 @@ function getBase64(img, callback) {
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 }
+
+const contentStyle = {
+  height: "160px",
+  color: "#fff",
+  lineHeight: "160px",
+  textAlign: "center",
+  background: "#364d79",
+};
 
 function Course() {
   const navigate = useNavigate();
@@ -204,6 +219,23 @@ function Course() {
     navigate(`${data._id}`);
   };
 
+  const onChangeSearch = (e) => {
+    getRequest(
+      "courses?categoryId=" + params.categoryId + "&key=" + e.target.value
+    ).then(({ data }) => {
+      setCourses(data);
+    });
+  };
+
+  const suffix = (
+    <SearchOutlined
+      className="searchinputfieldbutton"
+      style={{
+        fontSize: 18,
+        color: "#1890ff",
+      }}
+    />
+  );
   return (
     <Layout>
       <div
@@ -221,10 +253,22 @@ function Course() {
           }}
         >
           <PageHeader
+            ghost={false}
+            style={{ width: "100%" }}
             className="site-page-header"
             onBack={() => window.history.back()}
             title={category?.name}
+            extra={[
+              <Input
+                className="searchinputfield"
+                placeholder="Search..."
+                size="large"
+                suffix={suffix}
+                onChange={onChangeSearch}
+              />,
+            ]}
           />
+
           {user?.role === "admin" ? (
             <Button
               className="button"
@@ -370,14 +414,15 @@ function Course() {
               justifyContent: "center",
             }}
           >
-            <Button
+            {/* <Button
               shape="circle"
               style={{
                 marginTop: "60px",
               }}
             >
               <LeftOutlined />
-            </Button>
+            </Button> */}
+
             {courses?.map((data, index) => {
               return (
                 <Col
@@ -388,7 +433,7 @@ function Course() {
                   }}
                 >
                   <Card
-                    style={{ width: "240px" }}
+                    style={{ width: "240px", cursor: "pointer" }}
                     cover={
                       <img
                         onClick={() => handleCard(data)}
@@ -398,8 +443,10 @@ function Course() {
                           height: "135px",
                         }}
                         src={data.image}
+                        className="coursCardImage"
                       />
                     }
+                    className="coursCard"
                   >
                     <div onClick={() => handleCard(data)}>
                       <Typography
@@ -602,14 +649,14 @@ function Course() {
                 </Col>
               );
             })}
-            <Button
+            {/* <Button
               style={{
                 marginTop: "60px",
               }}
               shape="circle"
             >
               <RightOutlined />
-            </Button>
+            </Button> */}
           </Row>
         </div>
       </div>

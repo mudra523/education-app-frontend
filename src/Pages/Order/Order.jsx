@@ -13,6 +13,10 @@ function Order() {
     });
   }, []);
 
+  const openCourse = (item) => {
+    navigate("/category/" + item.category_id + "/courses/" + item._id);
+  };
+
   return (
     <Layout>
       <div
@@ -59,14 +63,17 @@ function Order() {
                               height: "70px",
                               width: "100px",
                               borderRadius: "10px 10px 10px 10px",
+                              cursor: "pointer",
                             }}
+                            onClick={() => openCourse(course)}
                             alt="course"
                             src={course.image}
                           />
                         </Col>
                         <Col style={{ marginLeft: "30px" }}>
                           <Typography
-                            style={{ padding: "2px 0px", fontWeight: "bold" }}
+                            className="cardItemTitle"
+                            onClick={() => openCourse(course)}
                           >
                             {course.name}
                           </Typography>

@@ -57,6 +57,10 @@ function Cart() {
     );
   };
 
+  const openCourse = (item) => {
+    navigate("/category/" + item.category._id + "/courses/" + item.course._id);
+  };
+
   return (
     <Layout>
       <div
@@ -72,12 +76,13 @@ function Cart() {
           renderItem={(item) => (
             <List.Item>
               <Row style={{ width: "100%" }}>
-                <Col>
+                <Col onClick={() => openCourse(item)}>
                   <img
                     style={{
                       height: "140px",
                       width: "200px",
                       borderRadius: "10px 10px 10px 10px",
+                      cursor: "pointer",
                     }}
                     alt="course"
                     src={item.course.image}
@@ -85,7 +90,8 @@ function Cart() {
                 </Col>
                 <Col style={{ marginLeft: "30px" }}>
                   <Typography
-                    style={{ padding: "2px 0px", fontWeight: "bold" }}
+                    onClick={() => openCourse(item)}
+                    className="cardItemTitle"
                   >
                     {item.course.name}
                   </Typography>
